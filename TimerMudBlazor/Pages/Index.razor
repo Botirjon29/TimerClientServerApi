@@ -1,0 +1,103 @@
+﻿@page "/"
+@using TimerMudBlazor.Service
+@using TimerMudBlazor.Dto
+@using TimerMudBlazor.ViewModel
+@inject TimerService timerService
+<PageTitle>Timer</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Timer app</MudText>
+
+<MudText>@_currentTime.ToString("hh\\:mm\\:ss")</MudText>
+
+<MudTextField @bind-Value="@h" Label="Hour" Variant="Variant.Outlined" Margin="Margin.Dense"/>:
+<MudTextField @bind-Value="@m" Label="Minut" Variant="Variant.Outlined" Margin="Margin.Dense"/>:
+<MudTextField @bind-Value="@s" Label="Second" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+
+<MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="StartAndStopTimerClick">Start/Stop</MudButton>
+<MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="ResetTimerClick">Reset</MudButton>
+
+@if (timerView is not null)
+{
+    <MudText>@timerView.StartTime</MudText>
+    <MudText>@timerView.EndTime</MudText>
+}
+
+@code {
+    TimerView? timerView { get; set; }
+    TimeSpan _currentTime;
+
+    public string? StartDate;
+    public string? EndDate;
+    
+    bool startTimer = false;
+    int h, m, s;
+
+    Timer timer;
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            timer = new Timer(callback: TimerFunction, state: null, dueTime: 1000, period: 1000);
+        }
+        base.OnAfterRender(firstRender);
+    }
+
+    async void TimerFunction(object state)
+    {
+        _currentTime = DateTime.Now.TimeOfDay;
+        if (startTimer)
+        {
+            if (h == 0 && m == 0 && s == 0)
+            {
+                startTimer = false;
+                h = 0; m = 0; s = 0;
+
+                if (EndDate is null)
+                {
+                    EndDate = DateTime.Now.TimeOfDay.ToString(@"hh\:mm\:ss");
+
+                    var timerDto = new CreateTimerDto { StartTime = StartDate, EndTime = EndDate };
+                    
+                    await timerService.CreateTimerAsync(timerDto);
+                    
+                    timerView = await timerService.GetTimerByDateAsync(timerDto.StartTime, timerDto.EndTime);
+                }
+            }
+            else if (s != 0)
+            {
+                s--;
+            }
+            else if (m != 0 && s == 0)
+            {
+                s = 59; m--;
+            }
+            else if (h != 0 && m == 0)
+            {
+                m = 60; h--;
+            }
+        }
+        StateHasChanged();
+    }
+    
+    void StartAndStopTimerClick()
+    {
+        startTimer = startTimer is false ? true : false;
+
+        if (StartDate is null)
+            StartDate = DateTime.Now.TimeOfDay.ToString(@"hh\:mm\:ss");
+        else if (EndDate is not null)
+            StartDate = DateTime.Now.TimeOfDay.ToString(@"hh\:mm\:ss"); EndDate = null;
+    }
+    
+    void ResetTimerClick()
+    {
+        h = 0; m = 0; s = 0;
+        startTimer = false;
+        
+        StartDate = null;
+        EndDate = null;
+
+        timerView.StartTime = null;
+        timerView.EndTime = null;
+    }
+}
