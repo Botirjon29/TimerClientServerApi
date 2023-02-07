@@ -198,13 +198,13 @@
       "mscorlib.dll": "sha256-KqZqU1imWCwJ9UPDElyoolN8s7Yqhjk67wuOohFN5KA=",
       "netstandard.dll": "sha256-kBK\/QJy7\/skP97jqnvXnOFMrhWS8HZ1bsADFK\/gZkyM=",
       "System.Private.CoreLib.dll": "sha256-3webPuyNUXfAFKY5c1tC\/jBVrjZHelBwvXrr1E9VJuk=",
-      "TimerMudBlazor.dll": "sha256-+ptySPoA6P4+paHyxxDtxQ77TehFGjYM9JmV9FGIYRM="
+      "TimerMudBlazor.dll": "sha256-\/CDuxXh3D1jnB6mO5LJUwzlcz34sQimwNNhL7Ovfrc4="
     },
     "extensions": null,
     "lazyAssembly": null,
     "libraryInitializers": null,
     "pdb": {
-      "TimerMudBlazor.pdb": "sha256-aq778ViK64BHe7W2h5JSTgQVSXJLnYXTxVfiaD0SH9I="
+      "TimerMudBlazor.pdb": "sha256-Ex\/Bs4EWRR992UbSyuEwu39Uby1aYoEbTmXePsr0Ibw="
     },
     "runtime": {
       "dotnet.6.0.13.w1n098yvy3.js": "sha256-X\/515F1HEzgsDZdY8BJjt8YUwrWngHGZkMnpClhsrpY=",

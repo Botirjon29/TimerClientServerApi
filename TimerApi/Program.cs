@@ -15,10 +15,10 @@ builder.Services.AddScoped<ITimerRepository, TimerRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("localhost"));
+    options.UseSqlite("Data source = timerapp.db");
 });
 
-builder.Services.AddCors(opt =>
+    builder.Services.AddCors(opt =>
 {
     opt.AddDefaultPolicy(policy =>
     {

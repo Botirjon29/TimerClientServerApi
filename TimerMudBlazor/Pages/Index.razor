@@ -16,14 +16,34 @@
 <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="StartAndStopTimerClick">Start/Stop</MudButton>
 <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="ResetTimerClick">Reset</MudButton>
 
-@if (timerView is not null)
+@if (timerViews is not null)
 {
-    <MudText>@timerView.StartTime</MudText>
-    <MudText>@timerView.EndTime</MudText>
+    int number = 1;
+    <MudSimpleTable Style="overflow-x: auto;">
+        <thead>
+        <tr>
+                <th>ID</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var timerElement in timerViews)
+        {
+            <tr>
+                <td>@(number++)</td>
+                <td>@timerElement.StartTime</td>
+                <td>@timerElement.EndTime</td>
+            </tr>
+        }
+        </tbody>
+    </MudSimpleTable>
 }
 
+
 @code {
-    TimerView? timerView { get; set; }
+
+    public List<TimerView>? timerViews = new();
     TimeSpan _currentTime;
 
     public string? StartDate;
@@ -60,7 +80,13 @@
                     
                     await timerService.CreateTimerAsync(timerDto);
                     
-                    timerView = await timerService.GetTimerByDateAsync(timerDto.StartTime, timerDto.EndTime);
+                    var timer = await timerService.GetTimerByDateAsync(timerDto.StartTime, timerDto.EndTime);
+                    Console.WriteLine($"timer : {timer.StartTime}");
+                    timerViews.Add(timer);
+                    foreach (var t in timerViews)
+                    {
+                        Console.WriteLine($"list : {t.EndTime}");
+                    }
                 }
             }
             else if (s != 0)
@@ -96,8 +122,5 @@
         
         StartDate = null;
         EndDate = null;
-
-        timerView.StartTime = null;
-        timerView.EndTime = null;
     }
 }
